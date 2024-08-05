@@ -1,0 +1,71 @@
+:where(html) {
+  --dark-100: hsl(200, 35%, 10%);
+  --dark-200: hsl(200, 35%, 15%);
+  --dark-300: hsl(200, 35%, 20%);
+  --dark-400: hsl(200, 35%, 25%);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  color: #fff;
+  font-family: 'Nippo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 16px;
+  text-shadow: 0 0 .25rem #000;
+  background: var(--dark-100);
+  image-rendering: pixelated;
+  user-select: none;
+  overflow: hidden;
+}
+
+button, input {
+  appearance: none;
+  border: 0;
+  font-family: inherit;
+}
+
+svg {
+  width: 100%;
+}
+.current-salt {
+  width: 100%;
+  text-align: center;
+  font-size: 2rem;
+}
+.current-salt .value {
+  margin-bottom: -1rem;
+  display: block;
+  color: hsl(210, 60%, 80%);
+  font-size: 5rem;
+}
+
+.spill {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  background: url('/spill.gif');
+  background-size: cover;
+  animation: jump-off 1s ease-in-out forwards;
+}
+
+@keyframes jump-off {
+  0% { transform: translateY(0) }
+  30% { transform: translateY(-5rem) }
+  100% { transform: translateY(60rem) }
+}
+
+.marquee-content {
+  display: inline-flex;
+  transform: translateX(100%);
+  animation: marquee 30s linear forwards;
+}
+@keyframes marquee {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
