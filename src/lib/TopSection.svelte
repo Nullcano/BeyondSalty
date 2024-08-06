@@ -5,26 +5,29 @@
   import Debug from "$lib/Debug.svelte";
 
   $: miningPower = $facilities.reduce((sum, item) => {
-    return sum + (item.effect * item.amount);
+    return sum + (item.effect * item.efficiency);
   }, 0);
 </script>
 
 <div class="top-section">
-  <div class="left">
-    <div class="title">
-      <img src="/logo.gif" alt="Beyond Salty">
-    </div>
-    <div class="display-current-salt">
-      <div class="salt-icon"></div>
-      <div class="flex-col">
-        <div>{@html convertWeight($data.salt.current)}</div> 
-        <div>+{@html convertWeight(miningPower + 1)} / sec & click</div>
-      </div>
-    </div>
+  <div></div>
+  <div class="title">
+    <img src="/assets/title-logo.svg" alt="Beyond Salty">
   </div>
   <div class="menu">
-    <a href="/">Mines</a>
-    <a href="/facilities">Facilities</a>
+    <a href="/">
+      <img src="/assets/mines.svg" alt="Mines">
+      <span>Mines</span>
+    </a>
+    <a href="/facilities">
+      <img src="/assets/facilities.svg" alt="Facilities">
+      <span>Facilities</span>
+    </a>
+  </div>
+  <div class="display-current-salt">
+    <div class="salt-icon"></div>
+    <div>{@html convertWeight($data.salt.current)}</div> 
+    <div class="dropdown">+{@html convertWeight(miningPower + 1)} per sec / click</div>
   </div>
   <div class="menu">
     <Debug />
@@ -35,29 +38,23 @@
 <style>
   .top-section {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
+    top: 1rem;
+    left: 1rem;
+    right: 1rem;
     height: 4rem;
-    padding-inline: 1rem;
+    padding: 1rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: linear-gradient(to bottom, var(--dark-100), transparent);
     z-index: 10;
   }
-  .left {
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-  }
   .title {
-    display: flex;
-    align-items: center;
+    position: fixed;
+    top: 2rem;
+    left: 2rem;
   }
   .title img {
-    height: 39px;
-    mix-blend-mode: overlay;
+    height: 2rem;
   }
   .menu {
     display: flex;
@@ -65,22 +62,48 @@
     gap: .5rem;
   }
   .menu a {
-    padding: .25rem .5rem;
-    background: var(--dark-200);
+    padding: .25rem 1rem;
+    height: 2rem;
     color: white;
-    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    background: rgba(0,0,0,.5);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255,255,255,.25);
+    border-radius: 2rem;
+    border-radius: 4rem;
     text-decoration: none;
   }
+  .menu a img {
+    width: 1.5rem;
+    opacity: .75;
+  }
   .display-current-salt {
+    position: relative;
     width: 16rem;
+    height: 2rem;
+    padding: .25rem 1rem;
     display: grid;
     grid-template-columns: auto 1fr;
     gap: .5rem;
-    font-size: 1rem;
+    background: linear-gradient(to right, rgba(0,0,0,.5), transparent);
+    backdrop-filter: blur(4px);
+    border-radius: 2rem;
   }
-  .flex-col {
-    display: flex;
-    flex-direction: column;
+  .dropdown {
+    display: none;
+    font-size: .8rem;
+  }
+  .display-current-salt:hover .dropdown {
+    position: absolute;
+    top: calc(100% + 1rem);
+    left: 0;
+    padding: .25rem .5rem;
+    border-radius: 1rem;
+    background: var(--dark-100);
+    display: block;
+    z-index: 10;
   }
   .salt-icon {
     margin-top: .25rem;
@@ -88,8 +111,5 @@
     height: 1rem;
     background: url('/spill.gif');
     background-size: cover;
-  }
-  .flex-col div:nth-child(2) {
-    font-size: .8rem;
   }
 </style>

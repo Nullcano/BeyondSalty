@@ -50,3 +50,33 @@ export function convertWeight(value) {
   const unitName = roundedValue === 1 ? unit.name : unit.plural;
   return `<span class="value">${roundedValue}</span> <span class="unit">${unitName}</span>`;
 }
+
+export function convertMl(milliliters) {
+  let value;
+  let unit;
+
+  if (milliliters >= 1000000) {
+      value = milliliters / 1000000;
+      unit = 'kiloliter';
+  } else if (milliliters >= 100000) {
+      value = milliliters / 100000;
+      unit = 'hectoliter';
+  } else if (milliliters >= 10000) {
+      value = milliliters / 10000;
+      unit = 'decaliter';
+  } else if (milliliters >= 1000) {
+      value = milliliters / 1000;
+      unit = 'liter';
+  } else if (milliliters >= 100) {
+      value = milliliters / 100;
+      unit = 'centiliter';
+  } else if (milliliters >= 10) {
+      value = milliliters / 10;
+      unit = 'deciliter';
+  } else {
+      value = milliliters;
+      unit = 'milliliter';
+  }
+
+  return `${value} ${unit}${value !== 1 ? 's' : ''}`;
+}

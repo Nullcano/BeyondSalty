@@ -7,11 +7,6 @@ const initData = {
     total: 0,
     second: 1,
     click: 1,
-  },
-  deposit: {
-    yield: 8,
-    currentDurability: 32,
-    maxDurability: 32,
   }
 };
 

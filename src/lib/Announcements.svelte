@@ -31,6 +31,7 @@
 <div class="marquee" bind:this={ticker}>
   <div class="icon-provider">
     <div class="icon"></div>
+    <span class="label">BrineWire</span>
   </div>
 
 </div>
@@ -38,7 +39,7 @@
 <style>
   .marquee {
     position: fixed;
-    top: 4rem;
+    top: 5rem;
     left: 1rem;
     right: 1rem;
     width: calc(100vw - 2rem);
@@ -48,27 +49,35 @@
     display: grid;
     align-items: center;
     grid-template-columns: auto 1fr;
-    background: hsla(200, 35%, 90%, .1);
+    background: hsla(200, 35%, 20%, .5);
+    border: 1px solid rgba(255,255,255,.25);
     backdrop-filter: blur(4px);
-    border-radius: 60rem;
     line-height: 1;
-    border: 1px solid rgba(255,255,255,.1);
-    z-index: 10;
+    z-index: 9;
   }
   .icon-provider {
     position: relative;
-    width: 2rem;
-    height: 2rem;
+    height: 100%;
+    padding-inline: .5rem;
     display: grid;
-    place-items: center;
+    grid-template-columns: auto 1fr;
+    gap: .5rem;
+    align-items: center;
     background: var(--dark-200);
-    border-right: 1px solid rgba(255,255,255,.1);
+    border-right: 1px solid rgba(255,255,255,.5);
     z-index: 1;
   }
   .icon {
-    width: 1rem;
-    height: 1rem;
-    background: url('/bulletin.gif');
+    width: 1.5rem;
+    height: 1.5rem;
+    background: url('/assets/brinewire.svg');
     background-size: cover;
+    transform: rotate(-90deg);
+    animation: wink 2s linear infinite;
+  }
+  @keyframes wink {
+    0% { transform: rotate(-90deg) }
+    50% { transform: rotate(0deg) }
+    100% { transform: rotate(-90deg) }
   }
 </style>

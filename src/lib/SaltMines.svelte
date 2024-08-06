@@ -6,9 +6,12 @@
 
   let idleInterval;
   let saltSpill;
+  const maxDurability = 100;
+  let currentDurabilityValue = 100;
+  let durabilityValue = 75;
 
   let miningPower = $facilities.reduce((sum, item) => {
-    return sum + (item.effect * item.amount);
+    return sum + (item.effect * item.efficiency);
   }, 0);
 
   function click() {
@@ -16,16 +19,11 @@
       if (d) {
         d.salt.current += (1 + miningPower);
         d.salt.total += (1 + miningPower);
-        d.deposit.currentDurability--;
-        if (d.deposit.currentDurability <= 0) {
-          d.deposit.currentDurability = d.deposit.maxDurability;
-          d.salt.current += d.deposit.yield;
-        }
-        updateDeposit();
         return d;
       }
     });
     spillSalt();
+    currentDurabilityValue--;
   }
 
   onMount(() => {
@@ -34,24 +32,17 @@
         if (d) {
           d.salt.current += (1 + miningPower);
           d.salt.total += (1 + miningPower);
-          d.deposit.currentDurability--;
-          if (d.deposit.currentDurability <= 0) {
-            d.deposit.currentDurability = d.deposit.maxDurability;
-            d.salt.current += d.deposit.yield;
-          } 
-          updateDeposit();
           return d;
         }
       });
       spillSalt();
+      currentDurabilityValue--;
     }, 1000)
   })
 
   onDestroy(() => {
     clearInterval(idleInterval);
   })
-
-  $: durabilityValue = 100;
 
   function spillSalt() {
     const child = document.createElement('div');
@@ -65,23 +56,21 @@
     }, 2000);
   }
 
-  function updateDeposit() {
-    let percentage = ($data.deposit.currentDurability / $data.deposit.maxDurability) * 100;
-    if (percentage >= 100) {
-      durabilityValue = 100;
-    } else if (percentage >= 75) {
+  $: {
+    if (currentDurabilityValue <= 0) {
+      currentDurabilityValue = maxDurability;
+    }
+
+    if (currentDurabilityValue <= 100 && currentDurabilityValue >= 66) {
       durabilityValue = 75;
-    } else if (percentage >= 50) {
+    } else if (currentDurabilityValue < 66 && currentDurabilityValue >= 33) {
       durabilityValue = 50;
-    } else if (percentage >= 25) {
+    } else if (currentDurabilityValue < 33 && currentDurabilityValue >= 0) {
       durabilityValue = 25;
-    } else {
-      durabilityValue = 100;
     }
   }
 </script>
 
-<div class="backdrop"></div>
 {#if $data}
   <div class="encounter-provider">
     <div class="current-salt">
@@ -90,12 +79,12 @@
     <div class="salt-sec">+{@html convertWeight(miningPower + 1)} per second & click</div>
     <div role="button"
         class="deposit" 
-        style="background-image:url('../deposit-{durabilityValue}.gif')"
+        style="background-image:url('/assets/deposit-{durabilityValue}.svg')"
         on:click={() => click()} 
         on:keydown={null} 
         tabindex="0"
     ></div>
-    <div bind:this={saltSpill}/>
+    <div class="salt-spill" bind:this={saltSpill}/>
   </div>
 {/if}
 
@@ -106,19 +95,7 @@
     left: 0;
     width: 100%;
     height: 100vh;
-    padding: 4rem;
-  }
-  .backdrop {
-    position: fixed;
-    top: 0rem;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    background-image: url('/bg.gif');
-    background-position: center;
-    background-size: cover;
-    mix-blend-mode: luminosity;
-    box-shadow: inset 0 0 8rem #000;
+    padding: 5rem;
   }
   .current-salt, .salt-sec {
     position: absolute;
@@ -135,8 +112,8 @@
   }
   .deposit {
     position: absolute;
-    width: 16rem;
-    height: 16rem;
+    width: 12rem;
+    height: 12rem;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) scale(1);
@@ -151,5 +128,8 @@
   }
   .deposit:active {
     transform: translate(-50%, -50%) scale(.8);
+  }
+  .salt-spill {
+    pointer-events: none;
   }
 </style>

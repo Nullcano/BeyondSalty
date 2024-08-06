@@ -1,13 +1,14 @@
 <script>
   import { onMount } from 'svelte';
   import { data } from '$lib/data';
+  import { convertMl } from '$lib/utils';
 
   $: saltWater = 0;
   let saltWaterInterval;
   
   function drain() {
     data.update(d => {
-      d.salt.current += saltWater;
+      d.salt.current += ((d.salt.current / 100) * (saltWater / 100));
       return d;
     })
     saltWater -= saltWater;
@@ -15,22 +16,22 @@
 
   onMount(() => {
     saltWaterInterval = setInterval(() => {
-      if (saltWater >= 1000) {
+      if (saltWater >= 1000000) {
         return;
       }
       saltWater++;
-    }, 1000)
+    }, 50)
   });
 </script>
 
 <div>
   <div class="container">
-    <div class="water" style="height: {saltWater/10}vh;"></div>
+    <div class="water" style="height: {saltWater/100}vh;"></div>
   </div>
   <div class="content">
     <div class="info">
       <div>Salt water level</div>
-      <div>{saltWater * 10} millilitres</div>
+      <div>{convertMl(saltWater)}</div>
     </div>
     <button class="drain" on:click={drain}>Drain</button>
   </div>

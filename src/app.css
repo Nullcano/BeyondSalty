@@ -22,6 +22,21 @@ body {
   overflow: hidden;
 }
 
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-image: url('/assets/backdrop.png');
+  background-position: center;
+  background-size: cover;
+  mix-blend-mode: luminosity;
+  filter: blur(4px);
+  opacity: .25;
+}
+
 button, input {
   appearance: none;
   border: 0;
