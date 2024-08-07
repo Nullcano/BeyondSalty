@@ -5,6 +5,18 @@
   import { upgrades } from '$lib/upgrades';
   import { convertWeight, createSlug } from '$lib/utils';
 
+  function calculateTotalCost(initialCost, amount) {
+    let totalCost = 0;
+    let cost = initialCost;
+
+    for (let i = 0; i < amount; i++) {
+      totalCost += cost;
+      cost = Math.floor(cost * 1.25);
+    }
+
+    return totalCost;
+  }
+
   function invest(facility, amount) {
     if ($data.salt.current < (facility.cost * amount)) {
       return;
@@ -22,9 +34,9 @@
       facilities.update(cs => {
         const index = cs.findIndex(c => c.name === facility.name);
         if (index !== -1) {
-          for (let i = 0; i < amount; i++) { 
+          for (let i = 0; i < amount; i++) {
             cs[index].efficiency++;
-            cs[index].cost = Math.floor(cs[index].cost *= 1.25);
+            cs[index].cost = Math.floor(cs[index].cost * 1.25);
           }
         }
         return cs;
@@ -87,28 +99,28 @@
               tabindex="0"
               on:click={() => invest(currentFacility, 1)}
               on:keydown={null}
-              class="invest cost {$data.salt.current < (currentFacility.cost * 1) ? 'red' : 'green' }"
+              class="invest cost {$data.salt.current < currentFacility.cost ? 'red' : 'green'}"
           >
             <div>+1 efficiency</div>
-            <div>Invest {@html convertWeight((currentFacility.cost * 1))} salt</div>
+            <div>Invest {@html convertWeight(calculateTotalCost(currentFacility.cost, 1))} salt</div>
           </div>
           <div role="button"
               tabindex="0"
               on:click={() => invest(currentFacility, 10)}
               on:keydown={null}
-              class="invest cost {$data.salt.current < (currentFacility.cost * 10) ? 'red' : 'green' }"
+              class="invest cost {$data.salt.current < calculateTotalCost(currentFacility.cost, 10) ? 'red' : 'green'}"
           >
             <div>+10 efficiency</div>
-            <div>Invest {@html convertWeight(currentFacility.cost * (10 * 1.25))} salt</div>
+            <div>Invest {@html convertWeight(calculateTotalCost(currentFacility.cost, 10))} salt</div>
           </div>
           <div role="button"
               tabindex="0"
               on:click={() => invest(currentFacility, 100)}
               on:keydown={null}
-              class="invest cost {$data.salt.current < (currentFacility.cost * 100) ? 'red' : 'green' }"
+              class="invest cost {$data.salt.current < calculateTotalCost(currentFacility.cost, 100) ? 'red' : 'green'}"
           >
             <div>+100 efficiency</div>
-            <div>Invest {@html convertWeight(currentFacility.cost * (100 * 1.25))} salt</div>
+            <div>Invest {@html convertWeight(calculateTotalCost(currentFacility.cost, 100))} salt</div>
           </div>
         </div>
       </div>
