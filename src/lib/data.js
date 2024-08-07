@@ -3,7 +3,7 @@ import { browser } from '$app/environment';
 
 const initData = {
   salt: {
-    current: 0,
+    current: 1000000,
     total: 0,
     second: 1,
     click: 1,

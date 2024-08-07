@@ -5,7 +5,7 @@
   import { upgrades } from '$lib/upgrades';
   import { convertWeight, createSlug } from '$lib/utils';
 
-  function getFacility(facility, amount) {
+  function invest(facility, amount) {
     if ($data.salt.current < (facility.cost * amount)) {
       return;
     } else {
@@ -24,7 +24,7 @@
         if (index !== -1) {
           for (let i = 0; i < amount; i++) { 
             cs[index].efficiency++;
-            cs[index].cost = Math.floor((cs[index].cost * 1.5) + 1);
+            cs[index].cost = Math.floor(cs[index].cost *= 1.25);
           }
         }
         return cs;
@@ -85,7 +85,7 @@
         <div class="invest-options">
           <div role="button"
               tabindex="0"
-              on:click={() => getFacility(currentFacility, 1)}
+              on:click={() => invest(currentFacility, 1)}
               on:keydown={null}
               class="invest cost {$data.salt.current < (currentFacility.cost * 1) ? 'red' : 'green' }"
           >
@@ -94,21 +94,21 @@
           </div>
           <div role="button"
               tabindex="0"
-              on:click={() => getFacility(currentFacility, 10)}
+              on:click={() => invest(currentFacility, 10)}
               on:keydown={null}
               class="invest cost {$data.salt.current < (currentFacility.cost * 10) ? 'red' : 'green' }"
           >
             <div>+10 efficiency</div>
-            <div>Invest {@html convertWeight((currentFacility.cost * 10))} salt</div>
+            <div>Invest {@html convertWeight(currentFacility.cost * (10 * 1.25))} salt</div>
           </div>
           <div role="button"
               tabindex="0"
-              on:click={() => getFacility(currentFacility, 100)}
+              on:click={() => invest(currentFacility, 100)}
               on:keydown={null}
               class="invest cost {$data.salt.current < (currentFacility.cost * 100) ? 'red' : 'green' }"
           >
             <div>+100 efficiency</div>
-            <div>Invest {@html convertWeight((currentFacility.cost * 100))} salt</div>
+            <div>Invest {@html convertWeight(currentFacility.cost * (100 * 1.25))} salt</div>
           </div>
         </div>
       </div>
@@ -161,9 +161,12 @@
 <style>
   .facility-page {
     position: relative;
-    padding-top: 6rem;
+    padding-top: 9rem;
+    padding-inline: 2rem;
+    padding-bottom: 2rem;
     display: grid;
     grid-template-columns: 1fr 1fr;
+    gap: 2rem;
   }
   .splash {
     position: fixed;
@@ -184,7 +187,6 @@
   }
   .header {
     position: relative;
-    padding: 2rem;
     display: flex;
     flex-direction: column;
     gap: 1rem;
@@ -217,8 +219,6 @@
   }
   .body {
     position: relative;
-    padding: 2rem;
-    padding-top: 0;
   }
   .sub-title {
     margin-bottom: 1rem;
@@ -226,6 +226,7 @@
   }
   .owned {
     padding: 1rem;
+    margin-bottom: 1rem;
     line-height: 1.5;
     background: var(--dark-200);
     border-left: 4px solid var(--dark-400);
@@ -273,7 +274,6 @@
   }
 
   .upgrades-provider {
-    padding: 2rem;
     position: relative;
   }
   .upgrades {
@@ -281,7 +281,7 @@
     display: flex;
     flex-direction: column;
     gap: .5rem;
-    height: calc(100vh - 13rem);
+    height: calc(100vh - 14rem);
     background-color: var(--dark-200);
     border: 1px solid rgba(255,255,255,.25);
     border-radius: 1rem;
